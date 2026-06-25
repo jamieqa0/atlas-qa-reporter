@@ -786,9 +786,51 @@
     font-weight: 500;
     color: var(--accent2);
   }
+
+  /* Mode toggle (상세 ↔ 발표) */
+  .mode-toggle {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 300;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid rgba(108,99,255,0.4);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  }
+  .mode-toggle:hover { border-color: var(--accent); box-shadow: 0 0 16px var(--glow); }
+  .mode-toggle .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent3); }
+  body.mode-present .mode-toggle .dot { background: var(--accent2); }
+  .mode-toggle .mode-hint { color: var(--text-dim); font-size: 11px; }
+
+  /* 발표 모드: 설명 텍스트를 숨기고 키워드·시각자료만 */
+  body.mode-present .lead,
+  body.mode-present .prompt-note,
+  body.mode-present .callout,
+  body.mode-present .accordion-body { display: none !important; }
+
+  @media (max-width: 768px) {
+    .mode-toggle { top: 10px; left: 10px; padding: 6px 12px; font-size: 12px; }
+    .mode-toggle .mode-hint { display: none; }
+  }
 </style>
 </head>
 <body>
+
+<button class="mode-toggle" id="modeToggle" title="발표 모드 ↔ 상세 모드 전환">
+  <span class="dot"></span><span id="modeLabel">상세 모드</span>
+  <span class="mode-hint">· 클릭해 전환</span>
+</button>
 
 <div class="progress-bar" id="progressBar"></div>
 
@@ -1452,6 +1494,14 @@ WebView 크래시 · PDF 다운로드 · OTA(EAS Update)</span>
   function toggleAccordion(el) {
     el.classList.toggle('open');
   }
+
+  // Mode toggle (상세 ↔ 발표)
+  const modeBtn = document.getElementById('modeToggle');
+  const modeLabel = document.getElementById('modeLabel');
+  modeBtn.addEventListener('click', () => {
+    const present = document.body.classList.toggle('mode-present');
+    modeLabel.textContent = present ? '발표 모드' : '상세 모드';
+  });
 </script>
 
 </body>
